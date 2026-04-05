@@ -10,10 +10,10 @@ export function GoogleOneTap() {
 
   useEffect(() => {
     if (isInitialized.current) return
-    if (typeof window === 'undefined' || !window.google) return
-    isInitialized.current = true
+    if (typeof window === 'undefined' || !(window as any).google) return
+    isInitialized.current = true;
 
-    window.google.accounts.id.initialize({
+    (window as any).google.accounts.id.initialize({
       client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || 'dummy-client-id', // Replace with a real one or use dummy validation if testing
       callback: async (response: any) => {
         try {
@@ -34,7 +34,7 @@ export function GoogleOneTap() {
       cancel_on_tap_outside: false,
     })
 
-    window.google.accounts.id.prompt()
+    (window as any).google.accounts.id.prompt()
   }, [setUser])
 
   return null

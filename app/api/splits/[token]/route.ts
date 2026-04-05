@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   req: Request,
-  { params }: { params: { token: string } }
+  { params }: { params: Promise<{ token: string }> }
 ) {
   const resolvedParams = await params
   const { token } = resolvedParams
@@ -29,7 +29,7 @@ export async function GET(
 
 export async function POST(
   req: Request,
-  { params }: { params: { token: string } }
+  { params }: { params: Promise<{ token: string }> }
 ) {
   const resolvedParams = await params
   const { token } = resolvedParams
