@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  picture       String?
+  provider      String? // e.g., 'google'
+  providerId    String? // google subject id
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  transactions  Transaction[]
+  splitsCreated Split[]       @relation("SplitCreator")
+  splitsOwed    Participant[]
+}
+
+enum TransactionType {
+  EXP // Expense
+  INC // Income
+}
+
+model Transaction {
+  id              String   @id @default(cuid())
+  amount          Float
+  type            TransactionType
+  category        String?
+  description     String?
+  date            DateTime @default(now())
+  
+  // Relations
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  
+  splitId         String?
+  split           Split?   @relation(fields: [splitId], references: [id])
+
+  // Linked income mapping (when friend pays)
+  linkedTxnId     String?  
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Split {
+  id          String   @id @default(cuid())
+  totalAmount Float
+  description String?
+  date        DateTime @default(now())
+  
+  creatorId   String
+  creator     User     @relation("SplitCreator", fields: [creatorId], references: [id])
+
+  participants Participant[]
+  transactions Transaction[] 
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Participant {
+  id          String   @id @default(cuid())
+  
+  splitId     String
+  split       Split    @relation(fields: [splitId], references: [id], onDelete: Cascade)
+  
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  name        String?  
+  
+  amountOwed  Float
+  hasPaid     Boolean  @default(false)
+  
+  // Unique link for the participant to pay
+  secureToken String   @unique @default(uuid())
+}
