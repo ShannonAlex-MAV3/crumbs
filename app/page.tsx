@@ -386,6 +386,7 @@ function AddSplitModal({ onAdded }: { onAdded: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {/* @ts-expect-error asChild type issue with React 19 */}
       <DialogTrigger asChild>
         <Button variant="secondary" className="flex-1 sm:flex-none h-10 px-4 rounded-full bg-primary/10 text-primary hover:bg-primary/20">
           <Users className="h-4 w-4 mr-2" />
