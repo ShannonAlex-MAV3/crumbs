@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect, useState, use } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { CheckCircle2, UserCircle2, Receipt, Users } from 'lucide-react'
-import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
-import { GoogleOneTap } from '@/components/GoogleOneTap'
-import { useAppStore } from '@/lib/store'
+import { GoogleOneTap } from '@/components/google/one-tap'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useAppStore } from '@/lib/store'
+import { CheckCircle2, Receipt, UserCircle2, Users } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { use, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 export default function PaySplitPage({ params }: { params: Promise<{ token: string }> }) {
   const router = useRouter()
@@ -50,18 +50,10 @@ export default function PaySplitPage({ params }: { params: Promise<{ token: stri
   // Other participants (excluding the current one)
   const otherParticipants = data?.split?.participants?.filter((p: any) => p.id !== data.id) ?? []
 
-  const promptGoogleSignIn = () => {
-    if (typeof window !== 'undefined' && (window as any).google?.accounts?.id) {
-      ;(window as any).google.accounts.id.prompt()
-    } else {
-      toast.error('Google sign-in is still loading. Try again in a moment.')
-    }
-  }
-
   const handlePay = async () => {
     if (!user) {
       toast.error('Sign in with Google to complete this payment and save it to your account.')
-      promptGoogleSignIn()
+      // promptGoogleSignIn()
       return
     }
     setPaying(true)
@@ -70,7 +62,7 @@ export default function PaySplitPage({ params }: { params: Promise<{ token: stri
       if (res.status === 401) {
         setUser(null)
         toast.error('Please sign in to continue.')
-        promptGoogleSignIn()
+        // promptGoogleSignIn()
         setPaying(false)
         return
       }
@@ -201,7 +193,7 @@ export default function PaySplitPage({ params }: { params: Promise<{ token: stri
                     <p className="text-sm text-foreground">
                       Sign in with Google to mark this paid. We will create your account if you are new and add this payment as an expense on your side.
                     </p>
-                    <Button type="button" className="w-full rounded-xl h-11" onClick={promptGoogleSignIn}>
+                    <Button type="button" className="w-full rounded-xl h-11">
                       Continue with Google
                     </Button>
                   </div>

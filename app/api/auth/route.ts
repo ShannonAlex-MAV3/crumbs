@@ -24,20 +24,11 @@ export async function POST(request: Request) {
         })
         payload = ticket.getPayload()
       } else {
-        // Fallback for demonstration if client ID is missing (simulate decoding a dummy token)
-        // Only for testing without an actual active Google App.
-        const base64Url = token.split('.')[1]
-        if (base64Url) {
-           const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-           payload = JSON.parse(Buffer.from(base64, 'base64').toString())
-        } else {
-           // Provide a dummy user
-           payload = { sub: 'dummy-123', email: 'test@example.com', name: 'Test User', picture: '' }
-        }
+        return NextResponse.json({ error: 'Server Error' }, { status: 500 })
       }
     } catch (e) {
        console.error("Token verification failed", e)
-       payload = { sub: 'mock123', email: 'mock@example.com', name: 'Mock User', picture: '' }
+        return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
     if (!payload?.email) {
