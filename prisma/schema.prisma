@@ -8,14 +8,14 @@ datasource db {
 
 model User {
   id            String    @id @default(cuid())
-  email         String    @unique
-  name          String?
+  email         String?    @unique
+  name          String
   picture       String?
   provider      String? // e.g., 'google'
   providerId    String? // google subject id
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
+  status        Status    @default(ACT)
   transactions  Transaction[]
   splitsCreated Split[]       @relation("SplitCreator")
   splitsOwed    Participant[]
@@ -80,4 +80,9 @@ model Participant {
   
   // Unique link for the participant to pay
   secureToken String   @unique @default(uuid())
+}
+
+enum Status {
+  ACT
+  INA
 }
