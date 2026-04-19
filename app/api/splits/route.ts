@@ -11,6 +11,24 @@ export async function POST(req: Request) {
     const data = await req.json()
     const { amount, description, participants, myShare } = data // participants: Array<{ name: string, amountOwed: number }>
 
+    // create users for each participant if they don't exist
+    const participantUsers = await prisma.user.findMany({
+      where: {
+        email: { in: participants.map((p: any) => p.email) },
+      },
+    })
+    const participantUserIds = participantUsers.map((u) => u.id)
+    const newParticipantUsers = participants.filter((p: any) => !participantUserIds.includes(p.userId)).map((p: any) => ({
+      email: p.email,
+      name: p.name,
+      picture: null,
+      provider: null,
+      providerId: null,
+    }))
+    await prisma.user.createMany({
+      data: newParticipantUsers,
+    })
+
     // Build participant list — optionally prepend creator's own share
     const allParticipants = [
       ...(myShare != null && !isNaN(parseFloat(myShare))
