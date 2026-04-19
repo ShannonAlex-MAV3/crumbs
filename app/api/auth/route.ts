@@ -3,7 +3,10 @@ import { OAuth2Client } from 'google-auth-library'
 import { prisma } from '@/lib/prisma'
 import { cookies } from 'next/headers'
 
-const client = new OAuth2Client(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID)
+const client = new OAuth2Client(
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET
+)
 
 export async function POST(request: Request) {
   try {

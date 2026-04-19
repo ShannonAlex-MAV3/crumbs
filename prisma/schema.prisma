@@ -76,6 +76,7 @@ model Participant {
   
   amountOwed  Float
   hasPaid     Boolean  @default(false)
+  note        String?  // optional per-participant description
   
   // Unique link for the participant to pay
   secureToken String   @unique @default(uuid())

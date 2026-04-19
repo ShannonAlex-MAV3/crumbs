@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Outfit } from 'next/font/google'
-import Script from 'next/script'
 import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -21,9 +20,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <head>
-        <Script src="https://accounts.google.com/gsi/client" strategy="beforeInteractive" />
-      </head>
       <body className={`${outfit.variable} font-sans antialiased min-h-screen flex flex-col bg-background text-foreground`}>
         <div className="fixed inset-0 z-[-1] bg-grid-white/[0.02] bg-[size:50px_50px]" />
         <div className="fixed inset-0 z-[-1] flex items-center justify-center">
