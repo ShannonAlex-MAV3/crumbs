@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, use } from 'react'
+import { useEffect, useState, use, useRef } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, UserCircle2, Receipt, Users } from 'lucide-react'
@@ -15,6 +15,7 @@ export default function PaySplitPage({ params }: { params: Promise<{ token: stri
   const { token } = use(params)
   const user = useAppStore((s) => s.user)
   const setUser = useAppStore((s) => s.setUser)
+  const googleButtonRef = useRef<HTMLDivElement>(null)
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [paying, setPaying] = useState(false)
@@ -111,7 +112,7 @@ export default function PaySplitPage({ params }: { params: Promise<{ token: stri
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4 py-12 px-4 sm:px-6 lg:px-8 bg-background relative overflow-hidden">
-      {needsSignIn ? <GoogleOneTap /> : null}
+      {needsSignIn ? <GoogleOneTap buttonRef={googleButtonRef} /> : null}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] max-w-[800px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="w-full max-w-md space-y-8 relative z-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -201,9 +202,7 @@ export default function PaySplitPage({ params }: { params: Promise<{ token: stri
                     <p className="text-sm text-foreground">
                       Sign in with Google to mark this paid. We will create your account if you are new and add this payment as an expense on your side.
                     </p>
-                    <Button type="button" className="w-full rounded-xl h-11" onClick={promptGoogleSignIn}>
-                      Continue with Google
-                    </Button>
+                    <div ref={googleButtonRef} className="flex justify-center" />
                   </div>
                 )}
                 <Button

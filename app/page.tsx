@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAppStore } from '@/lib/store'
 import { GoogleOneTap } from '@/components/GoogleOneTap'
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,7 @@ import { isSplitPaymentIncome } from '@/lib/transaction-policy'
 
 export default function Home() {
   const { user, setUser, isLoading, setIsLoading } = useAppStore()
+  const googleButtonRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetch('/api/auth')
@@ -44,7 +45,7 @@ export default function Home() {
   if (!user) {
     return (
       <main className="flex-1 flex flex-col items-center justify-center min-h-screen px-4">
-        <GoogleOneTap />
+        <GoogleOneTap buttonRef={googleButtonRef} />
         <div className="absolute top-8 left-8">
           <div className="text-2xl font-bold tracking-tighter">crumbs.</div>
         </div>
@@ -59,16 +60,8 @@ export default function Home() {
           <p className="text-xl text-muted-foreground max-w-[600px] mx-auto leading-relaxed">
             Beautifully designed expense and income tracking. Configure splits with friends and settle up effortlessly.
           </p>
-          <div className="pt-8">
-            <Button size="lg" className="rounded-full px-8 h-12 text-lg shadow-[0_0_40px_rgba(var(--primary),0.3)] transition-all hover:scale-105" onClick={() => {
-              if (typeof window !== 'undefined' && (window as any).google) {
-                (window as any).google.accounts.id.prompt()
-              } else {
-                toast.error('Google Auth is loading. Please wait.')
-              }
-            }}>
-              Continue with Google
-            </Button>
+          <div className="pt-8 flex justify-center">
+            <div ref={googleButtonRef} />
           </div>
         </div>
       </main>

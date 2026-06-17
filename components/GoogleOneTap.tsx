@@ -5,7 +5,11 @@ import { useAppStore } from '@/lib/store'
 import { toast } from 'sonner'
 import Script from 'next/script'
 
-export function GoogleOneTap() {
+interface GoogleOneTapProps {
+  buttonRef?: React.RefObject<HTMLDivElement>
+}
+
+export function GoogleOneTap({ buttonRef }: GoogleOneTapProps) {
   const setUser = useAppStore((state) => state.setUser)
   const isInitialized = useRef(false)
 
@@ -34,20 +38,28 @@ export function GoogleOneTap() {
       },
       cancel_on_tap_outside: false,
       context: 'signin',
-      use_fedcm_for_prompt: true,
       itp_support: true,
     });
+
+    if (buttonRef?.current) {
+      (window as any).google.accounts.id.renderButton(buttonRef.current, {
+        theme: 'outline',
+        size: 'large',
+        text: 'continue_with',
+        shape: 'pill',
+        width: 280,
+      })
+    }
 
     (window as any).google.accounts.id.prompt()
   }
 
   useEffect(() => {
-    // Attempt to initialize if the script is already loaded
     initializeGoogleOneTap()
   }, [setUser])
 
   return (
-    <Script 
+    <Script
       src="https://accounts.google.com/gsi/client"
       strategy="afterInteractive"
       onLoad={initializeGoogleOneTap}
