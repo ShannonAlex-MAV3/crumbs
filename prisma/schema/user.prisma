@@ -1,0 +1,23 @@
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String?
+  picture        String?
+  provider       Provider
+  providerUserId String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  status         Status   @default(ACT)
+
+  @@unique([provider, providerUserId])
+  @@map("t_user")
+}
+
+enum Status {
+  ACT
+  INA
+}
+
+enum Provider {
+  GOOGLE
+}

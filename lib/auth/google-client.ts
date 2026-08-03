@@ -1,0 +1,13 @@
+import { OAuth2Client } from "google-auth-library";
+
+export const googleClient = new OAuth2Client(
+    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+    process.env.GOOGLE_CLIENT_SECRET!,
+    process.env.GOOGLE_REDIRECT_URI!
+);
+
+export const GOOGLE_SCOPES = [
+  "https://www.googleapis.com/auth/userinfo.profile",
+  "https://www.googleapis.com/auth/userinfo.email",
+  "openid",
+];
