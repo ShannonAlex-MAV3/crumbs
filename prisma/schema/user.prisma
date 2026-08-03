@@ -9,6 +9,8 @@ model User {
   updatedAt      DateTime @updatedAt
   status         Status   @default(ACT)
 
+  transactions Transaction[]
+
   @@unique([provider, providerUserId])
   @@map("t_user")
 }

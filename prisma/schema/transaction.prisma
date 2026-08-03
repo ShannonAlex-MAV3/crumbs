@@ -1,0 +1,25 @@
+model Transaction {
+  id          String          @id @default(cuid())
+  amount      Float
+  typeId      String
+  txnType     String
+  txnTypeId   TransactionType @relation(fields: [typeId], references: [id])
+  category    String?
+  description String?
+  date        DateTime        @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TransactionType {
+  id      String  @id @default(cuid())
+  code    String  @unique
+  name    String
+  default Boolean
+
+  transactions Transaction[]
+}
